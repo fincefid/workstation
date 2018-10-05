@@ -44,11 +44,11 @@ ln ./modules/git/.gitignore-global ~/.gitignore-global
 #
 # Start docker containers
 #
-echo "Starting docker containers"
-if [[ $(docker ps -a -q) == 0 ]] ; then
-    docker kill $(docker ps -a -q)
-fi
-docker-compose -f modules/docker-compose.yml up &
+#echo "Starting docker containers"
+#if [[ $(docker ps -a -q) == 0 ]] ; then
+#    docker kill $(docker ps -a -q)
+#fi
+#docker-compose -f modules/docker-compose.yml up &
 
 #
 # Set Zsh as default shell
