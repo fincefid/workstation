@@ -4,8 +4,6 @@ set -o errexit
 set -o pipefail
 
 user=$(id -un)
-group=staff
-basename = $0
 
 #
 # Execute commands as the superuser
@@ -20,6 +18,7 @@ if [[ $? != 0 ]] ; then
 	echo "Homebrew not installed, installing now..."
 	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	brew install caskroom/cask/brew-cask
+	sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
 echo "Brew updating"
@@ -31,8 +30,15 @@ echo "Brew update completed"
 #
 # Create symbolic links to Git config files
 #
-ln ./modules/git/.gitconfig ~/.gitconfig
-ln ./modules/git/.gitignore-global ~/.gitignore-global
+gitconfig="/Users/${user}/.gitconfig"
+if [ -e "$gitconfig" ]
+then
+	echo "$gitconfig found. Not Creating"
+else
+    ln ./modules/git/.gitconfig ~/.gitconfig
+    ln ./modules/git/.gitignore-global ~/.gitignore-global
+fi
+
 
 #
 # Install Git pair program (TEAM WORKSTATION ONLY)
@@ -53,5 +59,6 @@ ln ./modules/git/.gitignore-global ~/.gitignore-global
 #
 # Set Zsh as default shell
 #
+#sudo echo "$(which zsh)" >> /etc/shells
 chsh -s $(which zsh)
 zsh -f
