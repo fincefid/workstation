@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+echo "Initialising..."
+
 set -o errexit
 set -o pipefail
 
-user=$(id -un)
+#
+# Execute commands as the superuser
+#
+sudo --validate
 
 install_brew_packages()
 {
@@ -18,14 +23,16 @@ install_brew_packages()
 # Install brew
 #
 which -s brew
-if [[ $? == 1 ]] ; then
+
+if [[ $? != 0 ]] ; then
 	echo "Homebrew not installed, installing now..."
-	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	brew install caskroom/cask/brew-cask
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	install_brew_packages
-	sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
+    echo "Homebrew installed, installing packages"
     install_brew_packages
+    omz update
 fi
 
 echo "finished"
